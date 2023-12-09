@@ -48,15 +48,15 @@ void Window::GetMousePos(int& x, int& y)
 
 Keystate Window::GetKeyState(sf::Keyboard::Key k)
 {
-    auto iter = m_keymap.find(k);
+    auto iter = m_keymap.find(k); //Проверка на наличие клавиши в map
     // new key
-    if (iter == m_keymap.end())
-    {
-        m_keymap[k] = Keystate::RELEASED;
-        return Keystate::RELEASED;
+    if (iter == m_keymap.end())           //Если не нашёл такой клавиши
+    {                                     
+        m_keymap[k] = Keystate::RELEASED; //Добавляет эту клавишу в map
+        return Keystate::RELEASED;        //Возвращает что эта клавиша отпущена
     }
 
-    return iter->second;
+    return iter->second; //Возвращает значение клавиши
 }
 
 Keystate Window::GetKeyState(sf::Mouse::Button b)
@@ -69,7 +69,7 @@ Keystate Window::GetKeyState(sf::Mouse::Button b)
         return Keystate::RELEASED;
     }
 
-    return iter->second;
+    return iter->second; //Возвращает значение мыши
 }
 
 void Window::PollEvents()
@@ -85,10 +85,11 @@ void Window::PollEvents()
     m_mouseX = localPosition.x;
     m_mouseY = localPosition.y;
 
-    // обновляет ключевые состояния
+    // обновляет состояния клавиш
     sf::Event event;
     while (m_window->pollEvent(event))
-    {   // проверяет тип события
+    {   
+        // проверяет тип события
         switch (event.type)
         {
         case sf::Event::Closed:
@@ -114,7 +115,18 @@ void Window::DrawRect(const sf::Vector2f& size, const sf::Vector2f& pos, const s
     m_window->draw(m_square);
 }
 
-void Window::DrawText(char& text, const sf::Vector2f& pos, const sf::Color& color, unsigned int size)
+void Window::DrawTriangle(const sf::Vector2f& pos1, const sf::Vector2f& pos2, const sf::Vector2f& pos3, const sf::Color& color)
+{
+    m_triangle.setPointCount(3);
+    m_triangle.setFillColor(color);
+    m_triangle.setPoint(0, pos1);
+    m_triangle.setPoint(1, pos2);
+    m_triangle.setPoint(2, pos3);
+
+    m_window->draw(m_triangle);
+}
+
+void Window::DrawText(char text, const sf::Vector2f& pos, const sf::Color& color, unsigned int size)
 {
     sf::Text t;
     t.setFont(m_font);
@@ -122,6 +134,7 @@ void Window::DrawText(char& text, const sf::Vector2f& pos, const sf::Color& colo
     t.setFillColor(color);
     t.setPosition(pos);
     t.setString(text);
+
     m_window->draw(t);
 }
 

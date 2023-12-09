@@ -6,7 +6,7 @@ class Field
 
 public:
 
-	enum State 
+	enum class State 
 	{
 		EMPTY,
 		SHIP,

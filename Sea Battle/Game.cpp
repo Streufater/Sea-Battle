@@ -6,6 +6,7 @@
 Game::Game()
 {
     m_window = Window(930, 800, "Sea Batlle");
+    m_window.FontFromFile("ofont.ru_Hero.ttf");
 }
 
 Game::~Game()
@@ -121,6 +122,24 @@ void Game::PrintMurkup()
     }
 }
 
+void Game::PrintSelectedShip(bool isVertical, int SelectedShipSize)
+{
+    if (isVertical)
+    {
+        for (int i = 0; i < SelectedShipSize; i++)
+        {
+            m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(82, 430 + 30 * i + 2 * i), sf::Color::Yellow);
+        }
+    }
+    else if (!isVertical)
+    {
+        for (int i = 0; i < SelectedShipSize; i++)
+        {
+            m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(82 + 30 * i + 2 * i, 430), sf::Color::Yellow);
+        }
+    }
+}
+
 void Game::PrintEmptyField()
 {
     PrintMurkup();
@@ -151,10 +170,10 @@ void Game::PrintField(bool Who_turn, Field& invisible)
                 int y = (k - 82) / 32;
                 switch (invisible.GetState(x, y))
                 {
-                case Field::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
-                case Field::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
-                case Field::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
-                case Field::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
+                case Field::State::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
+                case Field::State::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
+                case Field::State::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
+                case Field::State::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
                 default:break;
                 }
             }
@@ -164,6 +183,8 @@ void Game::PrintField(bool Who_turn, Field& invisible)
             {
                 m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue);
             }
+
+        m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
     }
     else if (Who_turn == 0)
     {
@@ -174,10 +195,10 @@ void Game::PrintField(bool Who_turn, Field& invisible)
                 int y = (k - 82) / 32;
                 switch (invisible.GetState(x, y))
                 {
-                case Field::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
-                case Field::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
-                case Field::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
-                case Field::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
+                case Field::State::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
+                case Field::State::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
+                case Field::State::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
+                case Field::State::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
                 default:break;
                 }
             }
@@ -186,6 +207,8 @@ void Game::PrintField(bool Who_turn, Field& invisible)
             {
                 m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue);
             }
+
+        m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
     }
 }
 
@@ -201,10 +224,10 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
             int y = (k - 82) / 32;
             switch (Player_1_field.GetState(x, y))
             {
-            case Field::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
-            case Field::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
-            case Field::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
-            case Field::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
+            case Field::State::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
+            case Field::State::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
+            case Field::State::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
+            case Field::State::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
             default:break;
             }
         }
@@ -219,14 +242,19 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
             int y = (k - 82) / 32;
             switch (Player_2_field.GetState(x, y))
             {
-            case Field::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
-            case Field::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
-            case Field::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
-            case Field::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
+            case Field::State::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
+            case Field::State::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
+            case Field::State::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
+            case Field::State::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
             default:break;
             }
         }
     }
+
+    if (Who_turn == 1)
+        m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
+    else if (Who_turn == 0)
+        m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
        
 }
 
@@ -277,6 +305,11 @@ void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Fiel
             isVertical = !isVertical;
         }
 
+        m_window.Clear();
+        PrintField(Who_turn, invisible);
+        Game::PrintSelectedShip(isVertical, SelectedShipSize);
+        m_window.Display();
+
         if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
         {
             int mouseX, mouseY;
@@ -309,19 +342,17 @@ void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Fiel
                 {
                     for (int i = 0; i < SelectedShipSize; i++)
                     {
-                        invisible.Field::SetState(Field::SHIP, x, y + i); // place ship
+                        invisible.Field::SetState(Field::State::SHIP, x, y + i); // place ship
                     }
                 }
                 else if (!isVertical)
                 {
                     for (int i = 0; i < SelectedShipSize; i++)
                     {
-                        invisible.Field::SetState(Field::SHIP, x + i, y); // place ship
+                        invisible.Field::SetState(Field::State::SHIP, x + i, y); // place ship
                     }
                 }
-                m_window.Clear();
-                PrintField(Who_turn, invisible);
-                m_window.Display();
+
                 SelectedShipSize = 0;
             }
         }
@@ -335,8 +366,9 @@ void Game::PlayerVersusPlayer()
 	unsigned int NumberOfHits_1 = 0;
 	unsigned int NumberOfHits_2 = 0;
 	bool Player_1_win = 1; bool Player_2_win = 1;
-	unsigned int x = 0;	unsigned int y = 0;
+	unsigned int x = 10;	unsigned int y = 10;
 	bool Who_turn = 1;
+
     PrintEmptyField(); // Вывод пустых полей
 	m_window.Display();
 
@@ -351,7 +383,8 @@ void Game::PlayerVersusPlayer()
 
 	while (Player_1_win && Player_2_win) // Цикл игры пока кто-то не проиграет
 	{
-	//	std::cout << "\033[2J";
+	//std::cout << "\033[2J";
+
 		m_window.Clear();
 		PrintField(Who_turn, Player_1_visible, Player_2_visible); // Вывод полей по которым стреляют игроки
 		m_window.Display();
@@ -369,7 +402,7 @@ void Game::PlayerVersusPlayer()
                 {
                     x = (mouseX - 530) / (30 + 2);
                     y = (mouseY - 82) / (30 + 2);
-                    if (Player_1_visible.GetState(x, y) == 0)
+                    if (Player_2_visible.GetState(x, y) == Field::State::EMPTY)
                     {
                         if (!HIT(x, y, Player_2_visible, Player_2_invisible))
                         {
@@ -383,12 +416,12 @@ void Game::PlayerVersusPlayer()
                     }
                     else
                     {
-                        std::cout << "BRUH" << std::endl;
+                        std::cout << "Ti suda strelal" << std::endl;
                     }
                 }
                 else
                 {
-                    std::cout << "BRUH" << std::endl;
+                    std::cout << "ne strelyai za pole" << std::endl;
                 }
             }
 		}
@@ -403,7 +436,7 @@ void Game::PlayerVersusPlayer()
                 {
                     x = (mouseX - 82) / (30 + 2);
                     y = (mouseY - 82) / (30 + 2);
-                    if (Player_1_visible.GetState(x, y) == 0)
+                    if (Player_1_visible.GetState(x, y) == Field::State::EMPTY)
                     {
                         if (!HIT(x, y, Player_1_visible, Player_1_invisible))
                         {
@@ -417,12 +450,12 @@ void Game::PlayerVersusPlayer()
                     }
                     else
                     {
-                        std::cout << "BRUH" << std::endl;
+                        std::cout << "Ti suda strelal" << std::endl;
                     }
                 }
                 else
                 {
-                    std::cout << "BRUH" << std::endl;
+                    std::cout << "ne strelyai za pole" << std::endl;
                 }
             }
 		}

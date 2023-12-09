@@ -12,6 +12,7 @@ public:
 	bool LoadFromFile(const char* filepath_1, const char* filepath_2);
 
 	void PrintMurkup();
+	void PrintSelectedShip(bool isVertical, int SelectedShipSize);
 	void PrintEmptyField();
 	void PrintField(bool Who_turn, Field& invisible);
 	void PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_field);
