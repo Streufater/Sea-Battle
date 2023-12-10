@@ -1,12 +1,18 @@
 #pragma once
 #include <array>
 
+struct Coords
+{
+	unsigned int x;
+	unsigned int y;
+};
+
 class Field
 {
 
 public:
 
-	enum State 
+	enum class State
 	{
 		EMPTY,
 		SHIP,
