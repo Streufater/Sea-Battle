@@ -25,6 +25,7 @@ public:
 	void Clear();
 	bool IsOpen();
 	void Display();
+
 	void PollEvents();
 
 	void GetMousePos(int& x, int& y);
@@ -43,6 +44,7 @@ private:
 	int m_mouseY;
 
 	std::shared_ptr<sf::RenderWindow> m_window;
+	
 	sf::RectangleShape m_square;
 	sf::ConvexShape m_triangle;
 	sf::Font m_font;

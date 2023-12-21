@@ -114,10 +114,18 @@ void Game::PrintMurkup()
     {
         text.setString(i);
 
-        m_window.DrawText(i, sf::Vector2f(82 + j, 57), sf::Color::White, 16);
         m_window.DrawText(i, sf::Vector2f(62, 76 + j), sf::Color::White, 16);
-        m_window.DrawText(i, sf::Vector2f(530 + j, 57), sf::Color::White, 16);
         m_window.DrawText(i, sf::Vector2f(510, 76 + j), sf::Color::White, 16);
+        j += 32;
+    }
+
+    j = 12;
+    for (char i = 'A'; i <= 'J'; i++)
+    {
+        text.setString(i);
+
+        m_window.DrawText(i, sf::Vector2f(82 + j, 57), sf::Color::White, 16);
+        m_window.DrawText(i, sf::Vector2f(530 + j, 57), sf::Color::White, 16);
         j += 32;
     }
 }
@@ -225,14 +233,12 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
             switch (Player_1_field.GetState(x, y))
             {
             case Field::State::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
-            case Field::State::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
             case Field::State::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
             case Field::State::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
             default:break;
             }
         }
     }
-        
 
     for (int k = 82; k <= 400; k += 32)
     {
@@ -243,7 +249,6 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
             switch (Player_2_field.GetState(x, y))
             {
             case Field::State::EMPTY: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue); break;
-            case Field::State::SHIP: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Yellow); break;
             case Field::State::MISS: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Cyan); break;
             case Field::State::HIT: m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Red); break;
             default:break;
@@ -252,10 +257,17 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
     }
 
     if (Who_turn == 1)
+    {
         m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 440), sf::Vector2f(62, 62), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 440), sf::Vector2f(420, 62), sf::Color::Green);
+
+    }
     else if (Who_turn == 0)
+    {
         m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
-       
+
+    }
 }
 
 void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Field& invisible)
@@ -358,8 +370,6 @@ void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Fiel
         }
     }
 }
-
-
 
 void Game::PlayerVersusPlayer()
 {
@@ -476,4 +486,13 @@ void Game::PlayerVersusPlayer()
 	{
 		std::cout << "Игрок 2 победил!";
 	}
+
+    m_window.Clear();
+    PrintField(Who_turn, Player_1_visible, Player_2_visible); // Вывод полей по которым стреляют игроки
+    m_window.Display();
+
+    while (!sf::Event::Closed)
+    {
+        m_window.PollEvents();
+    }
 }
