@@ -193,6 +193,10 @@ void Game::PrintField(bool Who_turn, Field& invisible)
             }
 
         m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(77, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(400, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 400), sf::Color::Green);
     }
     else if (Who_turn == 0)
     {
@@ -217,6 +221,10 @@ void Game::PrintField(bool Who_turn, Field& invisible)
             }
 
         m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 330), sf::Vector2f(521, 81), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 330), sf::Vector2f(844, 81), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(330, 5), sf::Vector2f(529, 81), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(330, 5), sf::Vector2f(529, 404), sf::Color::Green);
     }
 }
 
@@ -259,14 +267,18 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
     if (Who_turn == 1)
     {
         m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 440), sf::Vector2f(62, 62), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 440), sf::Vector2f(420, 62), sf::Color::Green);
-
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(525, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(848, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 400), sf::Color::Green);
     }
     else if (Who_turn == 0)
     {
         m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
-
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(77, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(400, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 400), sf::Color::Green);
     }
 }
 
