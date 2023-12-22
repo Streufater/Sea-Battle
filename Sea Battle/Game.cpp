@@ -221,10 +221,10 @@ void Game::PrintField(bool Who_turn, Field& invisible)
             }
 
         m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 330), sf::Vector2f(521, 81), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 330), sf::Vector2f(844, 81), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(330, 5), sf::Vector2f(529, 81), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(330, 5), sf::Vector2f(529, 404), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(525, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(848, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 400), sf::Color::Green);
     }
 }
 
