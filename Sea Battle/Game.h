@@ -12,10 +12,14 @@ public:
 	bool LoadFromFile(const char* filepath_1, const char* filepath_2);
 
 	void PrintMurkup();
-	void PrintSelectedShip(bool isVertical, int SelectedShipSize);
+	void PrintFieldBorders(bool Whose_turn);
+	void PrintGuid();
+
 	void PrintEmptyField();
 	void PrintField(bool Who_turn, Field& invisible);
 	void PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_field);
+
+	void PrintSelectedShip(bool isVertical, int SelectedShipSize);
 	void PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Field& invisible);
 
 	bool HIT(unsigned int x, unsigned int y, Field& visible, Field& invisible);

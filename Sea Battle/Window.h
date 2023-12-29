@@ -3,6 +3,7 @@
 #include "Field.h"
 #include <memory>
 #include <map>
+#include <string>
 
 enum class Keystate
 {
@@ -35,6 +36,8 @@ public:
 	void DrawRect(const sf::Vector2f& Size, const sf::Vector2f& pos, const sf::Color& color);
 	void DrawTriangle(const sf::Vector2f& pos1, const sf::Vector2f& pos2, const sf::Vector2f& pos3, const sf::Color& color);
 	void DrawText(char text, const sf::Vector2f& pos, const sf::Color& color, unsigned int size);
+	void DrawString(std::wstring text, const sf::Vector2f pos, const sf::Color& color, unsigned int size);
+	void DrawString(std::string text, const sf::Vector2f pos, const sf::Color& color, unsigned int size);
 
 private:
 

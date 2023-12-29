@@ -1,11 +1,11 @@
-#include "Game.h"
+п»ї#include "Game.h"
 #include <vector>
 #include <iostream>
 #include "Window.h"
 
 Game::Game()
 {
-    m_window = Window(930, 800, "Sea Batlle");
+    m_window = Window(930, 700, "Sea Batlle");
     m_window.FontFromFile("ofont.ru_Hero.ttf");
 }
 
@@ -58,10 +58,10 @@ bool Game::CheckForDeadShip(unsigned int x, unsigned int y, Field& visible, Fiel
 			tmp = { tmp.x + DirectionsOfCheck[i].x, tmp.y + DirectionsOfCheck[i].y };
 			cell = invisible.GetState(tmp.x, tmp.y);
 
-			if (cell == Field::State::SHIP && visible.GetState(tmp.x, tmp.y) == Field::State::EMPTY) // Если в корабль не попали или он не убит возвращает false
+			if (cell == Field::State::SHIP && visible.GetState(tmp.x, tmp.y) == Field::State::EMPTY) // Р•СЃР»Рё РІ РєРѕСЂР°Р±Р»СЊ РЅРµ РїРѕРїР°Р»Рё РёР»Рё РѕРЅ РЅРµ СѓР±РёС‚ РІРѕР·РІСЂР°С‰Р°РµС‚ false
 				return false;
 
-			// Запись координат всех клеток поля, вокруг корабля, где необходимо установить значения MISS если корабль убит
+			// Р—Р°РїРёСЃСЊ РєРѕРѕСЂРґРёРЅР°С‚ РІСЃРµС… РєР»РµС‚РѕРє РїРѕР»СЏ, РІРѕРєСЂСѓРі РєРѕСЂР°Р±Р»СЏ, РіРґРµ РЅРµРѕР±С…РѕРґРёРјРѕ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ MISS РµСЃР»Рё РєРѕСЂР°Р±Р»СЊ СѓР±РёС‚
 			CoordsOfMisses.push_back ({ tmp.x + Sides[i].x, tmp.y + Sides[i].y });
 			CoordsOfMisses.push_back ({ tmp.x - Sides[i].x, tmp.y - Sides[i].y });
 
@@ -128,24 +128,36 @@ void Game::PrintMurkup()
         m_window.DrawText(i, sf::Vector2f(530 + j, 57), sf::Color::White, 16);
         j += 32;
     }
+
 }
 
-void Game::PrintSelectedShip(bool isVertical, int SelectedShipSize)
+void Game::PrintFieldBorders(bool Whose_turn)
 {
-    if (isVertical)
+    if (Whose_turn == 1)
     {
-        for (int i = 0; i < SelectedShipSize; i++)
-        {
-            m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(82, 430 + 30 * i + 2 * i), sf::Color::Yellow);
-        }
+        m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(525, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(848, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 400), sf::Color::Green);
     }
-    else if (!isVertical)
+    else if (Whose_turn == 0)
     {
-        for (int i = 0; i < SelectedShipSize; i++)
-        {
-            m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(82 + 30 * i + 2 * i, 430), sf::Color::Yellow);
-        }
+        m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(77, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(400, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 77), sf::Color::Green);
+        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 400), sf::Color::Green);
     }
+}
+
+void Game::PrintGuid()
+{
+    m_window.DrawString(L"1, 2, 3, 4 - СЂР°Р·РјРµСЂ РєРѕСЂР°Р±Р»СЏ", sf::Vector2f(20, 580), sf::Color::White, 16);
+    m_window.DrawString(L"Space - РїРѕРІРѕСЂРѕС‚ РєРѕСЂР°Р±Р»СЏ РЅР° 90 РіСЂР°РґСѓСЃРѕРІ", sf::Vector2f(20, 615), sf::Color::White, 16);
+    m_window.DrawString(L"РџРµСЂРµРґ С‚РµРј РєР°Рє РїРѕСЃС‚Р°РІРёС‚СЊ РєРѕСЂР°Р±Р»СЊ РІС‹Р±РµСЂРµС‚Рµ РµРіРѕ СЂР°Р·РјРµСЂ!", sf::Vector2f(20, 650), sf::Color::White, 16);
+    //m_window.DrawString(L"\u12F8", sf::Vector2f(20, 700), sf::Color::White, 16);
+
 }
 
 void Game::PrintEmptyField()
@@ -165,11 +177,12 @@ void Game::PrintEmptyField()
         }
 }
 
-void Game::PrintField(bool Who_turn, Field& invisible)
+void Game::PrintField(bool Whose_turn, Field& invisible)
 {
     PrintMurkup();
+    PrintGuid();
 
-    if (Who_turn == 1)
+    if (Whose_turn == 1)
     {
         for (int k = 82; k <= 400; k += 32)
             for (int b = 82; b <= 400; b += 32)
@@ -192,13 +205,9 @@ void Game::PrintField(bool Who_turn, Field& invisible)
                 m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue);
             }
 
-        m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(77, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(400, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 400), sf::Color::Green);
+        PrintFieldBorders(!Whose_turn);
     }
-    else if (Who_turn == 0)
+    else if (Whose_turn == 0)
     {
         for (int k = 82; k <= 400; k += 32)
             for (int b = 530; b <= 848; b += 32)
@@ -220,15 +229,11 @@ void Game::PrintField(bool Who_turn, Field& invisible)
                 m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue);
             }
 
-        m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(525, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(848, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 400), sf::Color::Green);
+        PrintFieldBorders(!Whose_turn);
     }
 }
 
-void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_field)
+void  Game::PrintField(bool Whose_turn, Field& Player_1_field, Field& Player_2_field)
 {
     PrintMurkup();
 
@@ -264,25 +269,28 @@ void  Game::PrintField(bool Who_turn, Field& Player_1_field, Field& Player_2_fie
         }
     }
 
-    if (Who_turn == 1)
+    PrintFieldBorders(Whose_turn);
+}
+
+void Game::PrintSelectedShip(bool isVertical, int SelectedShipSize)
+{
+    if (isVertical)
     {
-        m_window.DrawTriangle(sf::Vector2f(430, 142), sf::Vector2f(430, 340), sf::Vector2f(500, 241), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(525, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(848, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(525, 400), sf::Color::Green);
+        for (int i = 0; i < SelectedShipSize; i++)
+        {
+            m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(82, 430 + 30 * i + 2 * i), sf::Color::Yellow);
+        }
     }
-    else if (Who_turn == 0)
+    else if (!isVertical)
     {
-        m_window.DrawTriangle(sf::Vector2f(500, 142), sf::Vector2f(500, 340), sf::Vector2f(430, 241), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(77, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(5, 327), sf::Vector2f(400, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 77), sf::Color::Green);
-        m_window.DrawRect(sf::Vector2f(327, 5), sf::Vector2f(77, 400), sf::Color::Green);
+        for (int i = 0; i < SelectedShipSize; i++)
+        {
+            m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(82 + 30 * i + 2 * i, 430), sf::Color::Yellow);
+        }
     }
 }
 
-void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Field& invisible)
+void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Field& invisible)
 {
     int SelectedShipSize = 0;
     bool isVertical = false;
@@ -330,7 +338,7 @@ void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Fiel
         }
 
         m_window.Clear();
-        PrintField(Who_turn, invisible);
+        PrintField(Whose_turn, invisible);
         Game::PrintSelectedShip(isVertical, SelectedShipSize);
         m_window.Display();
 
@@ -338,12 +346,12 @@ void  Game::PlacementOfShips(bool Who_turn, unsigned int x, unsigned int y, Fiel
         {
             int mouseX, mouseY;
             m_window.GetMousePos(mouseX, mouseY);
-            if (Who_turn == 1 && mouseX >= 82 && mouseX <= 400 && mouseY >= 82 && mouseY <= 400)
+            if (Whose_turn == 1 && mouseX >= 82 && mouseX <= 400 && mouseY >= 82 && mouseY <= 400)
             {
                 x = (mouseX - 82) / (CELL_SIZE + 2);
                 y = (mouseY - 82) / (CELL_SIZE + 2);
             }
-            else if (Who_turn == 0 && mouseX >= 530 && mouseX <= 848 && mouseY >= 82 && mouseY <= 400)
+            else if (Whose_turn == 0 && mouseX >= 530 && mouseX <= 848 && mouseY >= 82 && mouseY <= 400)
             {
                 x = (mouseX - 530) / (CELL_SIZE + 2);
                 y = (mouseY - 82) / (CELL_SIZE + 2);
@@ -389,31 +397,31 @@ void Game::PlayerVersusPlayer()
 	unsigned int NumberOfHits_2 = 0;
 	bool Player_1_win = 1; bool Player_2_win = 1;
 	unsigned int x = 10;	unsigned int y = 10;
-	bool Who_turn = 1;
+	bool Whose_turn = 1;
 
-    PrintEmptyField(); // Вывод пустых полей
+    PrintEmptyField(); // Р’С‹РІРѕРґ РїСѓСЃС‚С‹С… РїРѕР»РµР№
 	m_window.Display();
 
-	PlacementOfShips(Who_turn, x, y, Player_1_invisible); // Игрок 1 расставляет корабли
+	PlacementOfShips(Whose_turn, x, y, Player_1_invisible); // РРіСЂРѕРє 1 СЂР°СЃСЃС‚Р°РІР»СЏРµС‚ РєРѕСЂР°Р±Р»Рё
 	m_window.Clear();
-	Who_turn = !Who_turn;
+    Whose_turn = !Whose_turn;
 
-    PrintEmptyField(); // Вывод пустых полей
-	PlacementOfShips(Who_turn, x, y, Player_2_invisible); // Игрок 2 расставляет корабли
-	Who_turn = !Who_turn;
+    PrintEmptyField(); // Р’С‹РІРѕРґ РїСѓСЃС‚С‹С… РїРѕР»РµР№
+	PlacementOfShips(Whose_turn, x, y, Player_2_invisible); // РРіСЂРѕРє 2 СЂР°СЃСЃС‚Р°РІР»СЏРµС‚ РєРѕСЂР°Р±Р»Рё
+    Whose_turn = !Whose_turn;
 
 
-	while (Player_1_win && Player_2_win) // Цикл игры пока кто-то не проиграет
+	while (Player_1_win && Player_2_win) // Р¦РёРєР» РёРіСЂС‹ РїРѕРєР° РєС‚Рѕ-С‚Рѕ РЅРµ РїСЂРѕРёРіСЂР°РµС‚
 	{
 	//std::cout << "\033[2J";
 
 		m_window.Clear();
-		PrintField(Who_turn, Player_1_visible, Player_2_visible); // Вывод полей по которым стреляют игроки
+		PrintField(Whose_turn, Player_1_visible, Player_2_visible); // Р’С‹РІРѕРґ РїРѕР»РµР№ РїРѕ РєРѕС‚РѕСЂС‹Рј СЃС‚СЂРµР»СЏСЋС‚ РёРіСЂРѕРєРё
 		m_window.Display();
 
         m_window.PollEvents();
 
-		if (Who_turn == 1) // Если ходит игрок 1
+		if (Whose_turn == 1) // Р•СЃР»Рё С…РѕРґРёС‚ РёРіСЂРѕРє 1
 		{
             if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
             {
@@ -428,7 +436,7 @@ void Game::PlayerVersusPlayer()
                     {
                         if (!HIT(x, y, Player_2_visible, Player_2_invisible))
                         {
-                            Who_turn = 0;
+                            Whose_turn = 0;
                         }
                         else
                         {
@@ -447,7 +455,7 @@ void Game::PlayerVersusPlayer()
                 }
             }
 		}
-		else if (Who_turn == 0) // Если ходит игрок 2
+		else if (Whose_turn == 0) // Р•СЃР»Рё С…РѕРґРёС‚ РёРіСЂРѕРє 2
 		{
             if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
             {
@@ -462,7 +470,7 @@ void Game::PlayerVersusPlayer()
                     {
                         if (!HIT(x, y, Player_1_visible, Player_1_invisible))
                         {
-                            Who_turn = 1;
+                            Whose_turn = 1;
                         }
                         else
                         {
@@ -492,15 +500,15 @@ void Game::PlayerVersusPlayer()
 	}
 	if (Player_1_win)
 	{
-		std::cout << "Игрок 1 победил!";
+		std::cout << "РРіСЂРѕРє 1 РїРѕР±РµРґРёР»!";
 	}
 	else if (Player_2_win)
 	{
-		std::cout << "Игрок 2 победил!";
+		std::cout << "РРіСЂРѕРє 2 РїРѕР±РµРґРёР»!";
 	}
 
     m_window.Clear();
-    PrintField(Who_turn, Player_1_visible, Player_2_visible); // Вывод полей по которым стреляют игроки
+    PrintField(Whose_turn, Player_1_visible, Player_2_visible); // Р’С‹РІРѕРґ РїРѕР»РµР№ РїРѕ РєРѕС‚РѕСЂС‹Рј СЃС‚СЂРµР»СЏСЋС‚ РёРіСЂРѕРєРё
     m_window.Display();
 
     while (!sf::Event::Closed)
