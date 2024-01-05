@@ -1,5 +1,7 @@
 ﻿#include "Game.h"
 #include "Window.h"
+
+
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -9,23 +11,29 @@ Game::Game()
 {
     m_window = Window(930, 700, "Sea Batlle");
     m_window.FontFromFile("ofont.ru_Hero.ttf");
+
+    // Init Bots
+    m_MyBot = new SmartBotAction();
+    m_EnemyBot = new StupidBotAction();
 }
 
 Game::~Game()
 {
+    delete(m_MyBot);
+    delete(m_EnemyBot);
 }
 
 struct Coords
 {
-	unsigned int x;
-	unsigned int y;
+    unsigned int x;
+    unsigned int y;
 };
 
 bool Game::LoadFromFile(const char* filepath_1, const char* filepath_2)
 {
-	bool res1 = Player_2_visible.Field::LoadFromFile(filepath_1);
-	bool res2 = Player_2_invisible.Field::LoadFromFile(filepath_2);
-	return res1 && res2;
+    bool res1 = Player_2_visible.Field::LoadFromFile(filepath_1);
+    bool res2 = Player_2_invisible.Field::LoadFromFile(filepath_2);
+    return res1 && res2;
 }
 
 bool Game::LoadToFile(const char* filepath_1, const char* filepath_2)
@@ -37,53 +45,53 @@ bool Game::LoadToFile(const char* filepath_1, const char* filepath_2)
 
 bool Game::HIT(unsigned int x, unsigned int y, Field& visible, Field& invisible)
 {
-	if (invisible.GetState(x, y) == Field::State::EMPTY)
-	{
-		visible.SetState(Field::State::MISS, x, y);
-		invisible.SetState(Field::State::MISS, x, y);
-		return false;
-	}
-	else if (invisible.GetState(x, y) == Field::State::SHIP)
-	{
-		visible.SetState(Field::State::HIT, x, y);
-		invisible.SetState(Field::State::HIT, x, y);
-		return true;
-	}
+    if (invisible.GetState(x, y) == Field::State::EMPTY)
+    {
+        visible.SetState(Field::State::MISS, x, y);
+        invisible.SetState(Field::State::MISS, x, y);
+        return false;
+    }
+    else if (invisible.GetState(x, y) == Field::State::SHIP)
+    {
+        visible.SetState(Field::State::HIT, x, y);
+        invisible.SetState(Field::State::HIT, x, y);
+        return true;
+    }
 }
 
 bool Game::CheckForDeadShip(unsigned int x, unsigned int y, Field& visible, Field& invisible)
 {
-	Coords DirectionsOfCheck[4]{ {1,0}, {-1,0}, {0,1}, {0,-1} };
-	Coords Sides[4]{ {0,1}, {0,1}, {1,0}, {1,0} };
-	std::vector<Coords> CoordsOfMisses;
+    Coords DirectionsOfCheck[4]{ {1,0}, {-1,0}, {0,1}, {0,-1} };
+    Coords Sides[4]{ {0,1}, {0,1}, {1,0}, {1,0} };
+    std::vector<Coords> CoordsOfMisses;
 
-	for (int i = 0; i < 4; i++)
-	{
-		Field::State cell = Field::State::EMPTY;
-		Coords tmp = {x, y};
-		do
-		{
-			tmp = { tmp.x + DirectionsOfCheck[i].x, tmp.y + DirectionsOfCheck[i].y };
-			cell = invisible.GetState(tmp.x, tmp.y);
+    for (int i = 0; i < 4; i++)
+    {
+        Field::State cell = Field::State::EMPTY;
+        Coords tmp = { x, y };
+        do
+        {
+            tmp = { tmp.x + DirectionsOfCheck[i].x, tmp.y + DirectionsOfCheck[i].y };
+            cell = invisible.GetState(tmp.x, tmp.y);
 
-			if (cell == Field::State::SHIP && visible.GetState(tmp.x, tmp.y) == Field::State::EMPTY) // Если в корабль не попали или он не убит возвращает false
-				return false;
+            if (cell == Field::State::SHIP && visible.GetState(tmp.x, tmp.y) == Field::State::EMPTY) // Если в корабль не попали или он не убит возвращает false
+                return false;
 
-			// Запись координат всех клеток поля, вокруг корабля, где необходимо установить значения MISS если корабль убит
-			CoordsOfMisses.push_back ({ tmp.x + Sides[i].x, tmp.y + Sides[i].y });
-			CoordsOfMisses.push_back ({ tmp.x - Sides[i].x, tmp.y - Sides[i].y });
+            // Запись координат всех клеток поля, вокруг корабля, где необходимо установить значения MISS если корабль убит
+            CoordsOfMisses.push_back({ tmp.x + Sides[i].x, tmp.y + Sides[i].y });
+            CoordsOfMisses.push_back({ tmp.x - Sides[i].x, tmp.y - Sides[i].y });
 
-		} while (cell != Field::State::EMPTY && cell != Field::State:: MISS);
+        } while (cell != Field::State::EMPTY && cell != Field::State::MISS);
 
-		CoordsOfMisses.push_back(tmp); 
-	}
-	
-	for (Coords miss : CoordsOfMisses)
-	{
-		visible.SetState(Field::State::MISS, miss.x, miss.y);
-		invisible.SetState(Field::State::MISS, miss.x, miss.y);
-	}
-	return true;
+        CoordsOfMisses.push_back(tmp);
+    }
+
+    for (Coords miss : CoordsOfMisses)
+    {
+        visible.SetState(Field::State::MISS, miss.x, miss.y);
+        invisible.SetState(Field::State::MISS, miss.x, miss.y);
+    }
+    return true;
 }
 
 bool Game::CheckForCorrectShipPosition(unsigned int x, unsigned int y, Field invisible, bool isVertical, int SelectedShipSize)
@@ -99,7 +107,7 @@ bool Game::CheckForCorrectShipPosition(unsigned int x, unsigned int y, Field inv
             if (y + i > 9)
                 return false;
     }
-    else if(!isVertical)
+    else if (!isVertical)
     {
         for (int i = -1; i <= SelectedShipSize; i++)
             for (int j = -1; j <= 1; j++)
@@ -402,20 +410,20 @@ void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Fi
 
 void Game::Play()
 {
-	unsigned int NumberOfHits_1 = 0;
-	unsigned int NumberOfHits_2 = 0;
-	bool Player_1_win = 1; bool Player_2_win = 1;
-	unsigned int x = 10;	unsigned int y = 10;
-	bool Whose_turn = 1;
+    unsigned int NumberOfHits_1 = 0;
+    unsigned int NumberOfHits_2 = 0;
+    bool Player_1_win = 1; bool Player_2_win = 1;
+    unsigned int x = 10;	unsigned int y = 10;
+    bool Whose_turn = 1;
 
     PrintEmptyField(); // Вывод пустых полей
-	m_window.Display();
+    m_window.Display();
 
     if (first == Player::Human)
         PlacementOfShips(Whose_turn, x, y, Player_1_invisible); // Игрок 1 расставляет корабли
     else Player_1_invisible.Field::LoadFromFile("Pole_2.txt");
-	
-	m_window.Clear();
+
+    m_window.Clear();
     Whose_turn = !Whose_turn;
 
     PrintEmptyField(); // Вывод пустых полей
@@ -425,16 +433,16 @@ void Game::Play()
 
     Whose_turn = !Whose_turn;
 
-	while (Player_1_win && Player_2_win) // Цикл игры пока кто-то не проиграет
-	{
-		m_window.Clear();
-		PrintField(Whose_turn, Player_1_visible, Player_2_visible); // Вывод полей по которым стреляют игроки
-		m_window.Display();
+    while (Player_1_win && Player_2_win) // Цикл игры пока кто-то не проиграет
+    {
+        m_window.Clear();
+        PrintField(Whose_turn, Player_1_visible, Player_2_visible); // Вывод полей по которым стреляют игроки
+        m_window.Display();
 
         m_window.PollEvents(); //Считывание ивентов
 
-		if (Whose_turn == 1 && first == Player::Human) // Если ходит игрок 1
-		{
+        if (Whose_turn == 1 && first == Player::Human) // Если ходит игрок 1
+        {
             if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
             {
                 int mouseX, mouseY;
@@ -458,14 +466,25 @@ void Game::Play()
                     }
                 }
             }
-		}
-        else if (Whose_turn == 1 && first == Player::Bot) // Если ходит игрок 2
+        }
+        else if (Whose_turn == 1 && first == Player::Bot) // Если ходит игрок 1
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            MyBotActions(x, y, Whose_turn, NumberOfHits_1);
+            //MyBotActions(x, y, Whose_turn, NumberOfHits_1);
+            m_MyBot->MakeTurn(x, y, ShotResult::MISS, Player_2_visible);
+
+            if (!HIT(x, y, Player_2_visible, Player_2_invisible))
+            {
+                Whose_turn = 0;
+            }
+            else
+            {
+                CheckForDeadShip(x, y, Player_2_visible, Player_2_invisible);
+                NumberOfHits_1++;
+            }
         }
-		else if (Whose_turn == 0 && second == Player::Human) // Если ходит игрок 2
-		{
+        else if (Whose_turn == 0 && second == Player::Human) // Если ходит игрок 2
+        {
             if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
             {
                 int mouseX, mouseY;
@@ -489,25 +508,37 @@ void Game::Play()
                     }
                 }
             }
-		}
+        }
         else if (Whose_turn == 0 && second == Player::Bot) // Если ходит игрок 2
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            EnemyBotActions(x, y, Whose_turn, NumberOfHits_2);
+            //EnemyBotActions(x, y, Whose_turn, NumberOfHits_2);
+
+            m_EnemyBot->MakeTurn(x, y, ShotResult::MISS, Player_1_visible);
+
+            if (!HIT(x, y, Player_1_visible, Player_1_invisible))
+            {
+                Whose_turn = 1;
+            }
+            else
+            {
+                CheckForDeadShip(x, y, Player_1_visible, Player_1_invisible);
+                NumberOfHits_2++;
+            }
         }
 
         //Проверка убиты и все корабли у одного из игроков
-		if (NumberOfHits_1 == 20)
-		{
-			Player_2_win = 0;
+        if (NumberOfHits_1 == 20)
+        {
+            Player_2_win = 0;
             std::cout << "Игрок 1 победил!";
-		}
-		else if (NumberOfHits_2 == 20)
-		{
-			Player_1_win = 0;
+        }
+        else if (NumberOfHits_2 == 20)
+        {
+            Player_1_win = 0;
             std::cout << "Игрок 2 победил!";
-		}
-	}
+        }
+    }
 
     m_window.Clear();
     PrintField(Whose_turn, Player_1_visible, Player_2_visible); // Вывод двух полей конечных полей
@@ -534,7 +565,7 @@ void Game::MainMenu()
     while (!sf::Event::Closed)
     {
         m_window.PollEvents();
-        if(m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
+        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
         {
             int mouseX, mouseY;
             m_window.GetMousePos(mouseX, mouseY);
@@ -543,13 +574,13 @@ void Game::MainMenu()
                 first = Player::Human;
                 second = Player::Human;
                 return;
-            }            
+            }
             else if (mouseX >= 423 && mouseX <= 506 && mouseY >= 290 && mouseY <= 335)
             {
                 first = Player::Human;
                 second = Player::Bot;
                 return;
-            }     
+            }
             else if (mouseX >= 409 && mouseX <= 521 && mouseY >= 365 && mouseY <= 410)
             {
                 first = Player::Bot;
@@ -612,8 +643,7 @@ void Game::MyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, unsi
                     }
                     return;
                 }
-            }
-            while (cell != Field::State::MISS && cell != Field::State::EMPTY);
+            } while (cell != Field::State::MISS && cell != Field::State::EMPTY);
         }
     }
     //LoadToFile("Player_1_visible.txt", "Player_1_invisible.txt");
@@ -669,12 +699,11 @@ void Game::EnemyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, u
                         CheckForDeadShip(x, y, Player_1_visible, Player_1_invisible);
                         NumberOfHits_2++;
                     }
-                    return; 
+                    return;
                 }
-            } 
-            while (cell != Field::State::MISS && cell != Field::State::EMPTY);
+            } while (cell != Field::State::MISS && cell != Field::State::EMPTY);
         }
     }
-   
+
     //LoadFromFile("Player_2_visible.txt", "Player_2_invisible.txt");
 }

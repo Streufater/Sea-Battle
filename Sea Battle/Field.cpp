@@ -29,7 +29,7 @@ bool Field::LoadFromFile(const char* filepath)
 
 	return false;
 }
-bool Field::LoadToFile(const char* filepath)
+bool Field::LoadToFile(const char* filepath) const
 {
 	std::ofstream field(filepath);   // окрываем файл для чтения
 	if (field.is_open())
@@ -45,17 +45,18 @@ bool Field::LoadToFile(const char* filepath)
 	return false;
 }
 
-Field::State Field::GetState(int x, int y)
+Field::State Field::GetState(int x, int y) const
 {
 	if (x < 0 || y < 0 || x > 9 || y > 9)
 		return Field::State::EMPTY;
 
 	return m_field[SubToInd(x, y)];
 }
+
 void Field::SetState(State s, int x, int y)
 {
 	if (x >= 0 && x <= 9 && y >= 0 && y <= 9)
-	m_field[SubToInd(x, y)] = s;
+		m_field[SubToInd(x, y)] = s;
 }
 
 void Field::Print()
@@ -68,7 +69,7 @@ void Field::Print()
 	}
 }
 
-int Field::SubToInd(int x, int y)
+int Field::SubToInd(int x, int y) const
 {
 	return y * 10 + x;
 }
