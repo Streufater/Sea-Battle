@@ -6,10 +6,17 @@ class Game
 {
 public:
 
+	enum class Player
+	{
+		Human,
+		Bot,
+	};
+
 	Game();
 	~Game();
 
 	bool LoadFromFile(const char* filepath_1, const char* filepath_2);
+	bool LoadToFile(const char* filepath_1, const char* filepath_2);
 
 	void PrintMurkup();
 	void PrintFieldBorders(bool Whose_turn);
@@ -26,9 +33,17 @@ public:
 	bool CheckForDeadShip(unsigned int x, unsigned int y, Field& visible, Field& invisible);
 	bool CheckForCorrectShipPosition(unsigned int x, unsigned int y, Field invisible, bool isVertical, int SelectedShipSize);
 
-	void PlayerVersusPlayer();
+	void Play();
+
+	void MainMenu();
+
+	void MyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, unsigned int& NumberOfHits_1);
+	void EnemyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, unsigned int& NumberOfHits_2);
 
 private:
+
+	Player first;
+	Player second;
 
 	Field Player_1_visible;
 	Field Player_1_invisible;

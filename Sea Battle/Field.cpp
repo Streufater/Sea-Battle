@@ -7,7 +7,6 @@ Field::Field()
 {
 
 }
-
 Field::~Field()
 {
 
@@ -26,7 +25,22 @@ bool Field::LoadFromFile(const char* filepath)
 		}
 		return true;
 	}
-	std::cout << "Не удалось загрузить: " << filepath << std::endl;
+	std::cout << L"Не удалось загрузить: " << filepath << std::endl;
+
+	return false;
+}
+bool Field::LoadToFile(const char* filepath)
+{
+	std::ofstream field(filepath);   // окрываем файл для чтения
+	if (field.is_open())
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			field << (int)m_field[i];
+		}
+		return true;
+	}
+	std::cout << L"Не удалось загрузить: " << filepath << std::endl;
 
 	return false;
 }
@@ -38,7 +52,6 @@ Field::State Field::GetState(int x, int y)
 
 	return m_field[SubToInd(x, y)];
 }
-
 void Field::SetState(State s, int x, int y)
 {
 	if (x >= 0 && x <= 9 && y >= 0 && y <= 9)

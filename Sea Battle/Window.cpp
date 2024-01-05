@@ -149,15 +149,3 @@ void Window::DrawString(std::wstring s, const sf::Vector2f pos, const sf::Color&
 
     m_window->draw(text);
 }
-
-void Window::DrawString(std::string s, const sf::Vector2f pos, const sf::Color& color, unsigned int size)
-{
-    sf::Text text;
-    text.setFont(m_font);
-    text.setString(s);
-    text.setCharacterSize(20);
-    text.setFillColor(color);
-    text.setPosition(pos);
-
-    m_window->draw(text);
-}

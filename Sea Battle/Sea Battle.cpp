@@ -1,5 +1,4 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include "Field.h"
 #include "Game.h"
 #include "Window.h"
@@ -7,13 +6,9 @@
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
-
-
     Game game;
-    //if (game.LoadFromFile("Pole_1.txt", "Pole_2.txt") == false)
-    //    return -1;
-    game.PlayerVersusPlayer();
+    game.MainMenu();
+    game.Play();
 
 
     return 0;
