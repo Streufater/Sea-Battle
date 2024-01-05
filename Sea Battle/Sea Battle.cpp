@@ -1,8 +1,7 @@
 ﻿#include <iostream>
-#include "Field.h"
 #include "Game.h"
-#include "Window.h"
-#include <SFML/Graphics.hpp>
+
+
 
 int main()
 {
@@ -13,4 +12,3 @@ int main()
 
     return 0;
 }
-

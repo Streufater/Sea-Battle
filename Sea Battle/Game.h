@@ -1,6 +1,7 @@
 #pragma once
 #include "Field.h"
 #include "Window.h"
+#include "BotAction.h"
 
 class Game
 {
@@ -41,6 +42,9 @@ public:
 	void EnemyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, unsigned int& NumberOfHits_2);
 
 private:
+
+	BotAction* m_MyBot = nullptr;
+	BotAction* m_EnemyBot = nullptr;
 
 	Player first;
 	Player second;
