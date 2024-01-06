@@ -34,12 +34,9 @@ public:
 	bool CheckForDeadShip(unsigned int x, unsigned int y, Field& visible, Field& invisible);
 	bool CheckForCorrectShipPosition(unsigned int x, unsigned int y, Field invisible, bool isVertical, int SelectedShipSize);
 
-	void Play();
+	bool Play();
 
 	void MainMenu();
-
-	void MyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, unsigned int& NumberOfHits_1);
-	void EnemyBotActions(unsigned int& x, unsigned int& y, bool& Whose_turn, unsigned int& NumberOfHits_2);
 
 private:
 

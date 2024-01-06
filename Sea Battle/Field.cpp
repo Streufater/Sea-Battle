@@ -48,7 +48,11 @@ bool Field::LoadToFile(const char* filepath) const
 Field::State Field::GetState(int x, int y) const
 {
 	if (x < 0 || y < 0 || x > 9 || y > 9)
+	{
+		//std::cout << "[GAME WARNING] out of bounds get!:" << " {" << x << "," << y << "}" << std::endl;
 		return Field::State::EMPTY;
+	}
+	
 
 	return m_field[SubToInd(x, y)];
 }
@@ -56,16 +60,33 @@ Field::State Field::GetState(int x, int y) const
 void Field::SetState(State s, int x, int y)
 {
 	if (x >= 0 && x <= 9 && y >= 0 && y <= 9)
+	{
 		m_field[SubToInd(x, y)] = s;
+	}
+	else
+	{
+		//std::cout << "[GAME WARNING] out of bounds Set!;" << " {" << x << "," << y << "}" << std::endl;
+	}
 }
 
-void Field::Print()
+void Field::Print() const
 {
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 			std::cout << (int)m_field[SubToInd(j, i)] << " ";
 		std::cout << std::endl;
+	}
+}
+
+void Field::Clear()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			SetState(State::EMPTY, i, j);
+		}
 	}
 }
 

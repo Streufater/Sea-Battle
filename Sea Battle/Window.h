@@ -35,8 +35,9 @@ public:
 
 	void DrawRect(const sf::Vector2f& Size, const sf::Vector2f& pos, const sf::Color& color);
 	void DrawTriangle(const sf::Vector2f& pos1, const sf::Vector2f& pos2, const sf::Vector2f& pos3, const sf::Color& color);
-	void DrawText(char text, const sf::Vector2f& pos, const sf::Color& color, unsigned int size);
+	void DrawText(wchar_t text, const sf::Vector2f& pos, const sf::Color& color, unsigned int size);
 	void DrawString(std::wstring text, const sf::Vector2f pos, const sf::Color& color, unsigned int size);
+	void DrawBackground();
 
 private:
 
@@ -47,6 +48,12 @@ private:
 
 	std::shared_ptr<sf::RenderWindow> m_window;
 	
+	// background
+	sf::Image m_BGimage;
+	sf::Texture m_BGtexture;
+	sf::Sprite m_BGsprite;
+
+
 	sf::RectangleShape m_square;
 	sf::ConvexShape m_triangle;
 	sf::Font m_font;

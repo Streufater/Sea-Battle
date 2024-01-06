@@ -17,11 +17,12 @@ public:
 
 	bool LoadFromFile(const char* filepath);
 	bool LoadToFile(const char* filepath) const;
-
+	
 	State GetState(int x, int y) const;
 	void SetState(State s, int x, int y);
 
-	void Print();
+	void Print() const;
+	void Clear();
 
 private:
 	int SubToInd(int x, int y) const;

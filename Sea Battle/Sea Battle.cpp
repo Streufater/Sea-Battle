@@ -6,9 +6,11 @@
 int main()
 {
     Game game;
-    game.MainMenu();
-    game.Play();
-
-
+    bool PlayAgain = true;
+    while (PlayAgain)
+    {
+        game.MainMenu();
+        PlayAgain = game.Play();
+    }
     return 0;
 }
