@@ -47,7 +47,7 @@ void Window::GetMousePos(int& x, int& y)
 	y = m_mouseY;
 }
 
-Keystate Window::GetKeyState(sf::Keyboard::Key k)
+Window::Keystate Window::GetKeyState(sf::Keyboard::Key k)
 {
 	auto iter = m_keymap.find(k); //Проверка на наличие клавиши в map
 	// new key
@@ -60,7 +60,7 @@ Keystate Window::GetKeyState(sf::Keyboard::Key k)
 	return iter->second; //Возвращает значение клавиши
 }
 
-Keystate Window::GetKeyState(sf::Mouse::Button b)
+Window::Keystate Window::GetKeyState(sf::Mouse::Button b)
 {
 	auto iter = m_mousemap.find(b);
 	// new button
@@ -144,7 +144,7 @@ void Window::DrawString(std::wstring s, const sf::Vector2f pos, const sf::Color&
 	sf::Text text;
 	text.setFont(m_font);
 	text.setString(s);
-	text.setCharacterSize(20);
+	text.setCharacterSize(size);
 	text.setFillColor(color);
 	text.setPosition(pos);
 

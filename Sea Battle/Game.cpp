@@ -1,7 +1,5 @@
 ﻿#include "Game.h"
 #include "Window.h"
-
-
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -13,8 +11,8 @@ Game::Game()
     m_window.FontFromFile("ofont.ru_Ramona.ttf");
 
     // Init Bots
-    m_MyBot = new SmartBotAction();
-    m_EnemyBot = new StupidBotAction();
+    m_MyBot = new FirstBotAction();
+    m_EnemyBot = new SecondBotAction();
     m_MyBot->Init();
     m_EnemyBot->Init();
 }
@@ -35,13 +33,6 @@ bool Game::LoadFromFile(const char* filepath_1, const char* filepath_2)
 {
     bool res1 = Player_2_visible.Field::LoadFromFile(filepath_1);
     bool res2 = Player_2_invisible.Field::LoadFromFile(filepath_2);
-    return res1 && res2;
-}
-
-bool Game::LoadToFile(const char* filepath_1, const char* filepath_2)
-{
-    bool res1 = Player_1_visible.Field::LoadToFile(filepath_1);
-    bool res2 = Player_1_invisible.Field::LoadToFile(filepath_2);
     return res1 && res2;
 }
 
@@ -138,11 +129,11 @@ void Game::PrintMurkup()
         m_window.DrawText(i, sf::Vector2f(510, 76 + j), sf::Color::White, 16);
         j += 32;
     }
-    m_window.DrawString(L"10", sf::Vector2f(55, 375), sf::Color::White, 16);
-    m_window.DrawString(L"10", sf::Vector2f(503, 375), sf::Color::White, 16);
+    m_window.DrawString(L"10", sf::Vector2f(55, 375), sf::Color::White, 18);
+    m_window.DrawString(L"10", sf::Vector2f(503, 375), sf::Color::White, 18);
 
     j = 12;
-    for (wchar_t i = L'А'; i <= L'Й'; i++)
+    for (wchar_t i = L'А'; i <= L'И'; i++)
     {
         text.setString(i);
 
@@ -150,9 +141,11 @@ void Game::PrintMurkup()
         m_window.DrawText(i, sf::Vector2f(528 + j, 57), sf::Color::White, 16);
         j += 32;
     }
+    m_window.DrawText(L'К', sf::Vector2f(80 + 12 + 32 * 9, 57), sf::Color::White, 16);
+    m_window.DrawText(L'К', sf::Vector2f(528 + 12 + 32 * 9, 57), sf::Color::White, 16);
 
-    m_window.DrawString(L"Поле первого игрока:", sf::Vector2f(82, 30), sf::Color::White, 14);
-    m_window.DrawString(L"Поле второго игрока:", sf::Vector2f(530, 30), sf::Color::White, 14);
+    m_window.DrawString(L"Поле первого игрока:", sf::Vector2f(82, 30), sf::Color::White, 20);
+    m_window.DrawString(L"Поле второго игрока:", sf::Vector2f(530, 30), sf::Color::White, 20);
 
 }
 
@@ -332,35 +325,35 @@ void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Fi
         m_window.PollEvents();
 
         // choose ship size
-        if (m_window.GetKeyState(sf::Keyboard::Key::Num1) == Keystate::PRESSED)
+        if (m_window.GetKeyState(sf::Keyboard::Key::Num1) == Window::Keystate::PRESSED)
         {
             if (NumberOfSingleDeck != 4)
             {
                 SelectedShipSize = 1;
             }
         }
-        else if (m_window.GetKeyState(sf::Keyboard::Key::Num2) == Keystate::PRESSED)
+        else if (m_window.GetKeyState(sf::Keyboard::Key::Num2) == Window::Keystate::PRESSED)
         {
             if (NumberOfDoubleDeck != 3)
             {
                 SelectedShipSize = 2;
             }
         }
-        else if (m_window.GetKeyState(sf::Keyboard::Key::Num3) == Keystate::PRESSED)
+        else if (m_window.GetKeyState(sf::Keyboard::Key::Num3) == Window::Keystate::PRESSED)
         {
             if (NumberOfThreeDeck != 2)
             {
                 SelectedShipSize = 3;
             }
         }
-        else if (m_window.GetKeyState(sf::Keyboard::Key::Num4) == Keystate::PRESSED)
+        else if (m_window.GetKeyState(sf::Keyboard::Key::Num4) == Window::Keystate::PRESSED)
         {
             if (NumberOfFourDeck != 1)
             {
                 SelectedShipSize = 4;
             }
         }
-        else if (m_window.GetKeyState(sf::Keyboard::Key::Space) == Keystate::PRESSED)
+        else if (m_window.GetKeyState(sf::Keyboard::Key::Space) == Window::Keystate::PRESSED)
         {
             isVertical = !isVertical;
         }
@@ -370,7 +363,7 @@ void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Fi
         Game::PrintSelectedShip(isVertical, SelectedShipSize);
         m_window.Display();
 
-        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
+        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Window::Keystate::PRESSED)
         {
             int mouseX, mouseY;
             m_window.GetMousePos(mouseX, mouseY);
@@ -458,7 +451,7 @@ bool Game::Play()
 
         if (Whose_turn == 1 && first == Player::Human) // Если ходит игрок 1 и это человек
         {
-            if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
+            if (m_window.GetKeyState(sf::Mouse::Button::Left) == Window::Keystate::PRESSED)
             {
                 int mouseX, mouseY;
                 m_window.GetMousePos(mouseX, mouseY);
@@ -507,7 +500,7 @@ bool Game::Play()
         }
         else if (Whose_turn == 0 && second == Player::Human) // Если ходит игрок 2  и это человек
         {
-            if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
+            if (m_window.GetKeyState(sf::Mouse::Button::Left) == Window::Keystate::PRESSED)
             {
                 int mouseX, mouseY;
                 m_window.GetMousePos(mouseX, mouseY);
@@ -560,29 +553,29 @@ bool Game::Play()
         {
             Player_2_win = 0;
             m_window.Clear();
-            m_window.DrawString(L"Первый игрок победил !", sf::Vector2f(343, 450), sf::Color::White, 16);
+            m_window.DrawString(L"Первый игрок победил !", sf::Vector2f(343, 450), sf::Color::White, 20);
         }
         else if (NumberOfHits_2 == 20)
         {
             Player_1_win = 0;
             m_window.Clear();
-            m_window.DrawString(L"Второй игрок победил !", sf::Vector2f(343, 450), sf::Color::White, 16);
+            m_window.DrawString(L"Второй игрок победил !", sf::Vector2f(343, 450), sf::Color::White, 20);
         }
     }
 
-    m_window.DrawString(L"Играть снова ?", sf::Vector2f(391, 500), sf::Color::White, 16);
+    m_window.DrawString(L"Играть снова ?", sf::Vector2f(391, 500), sf::Color::White, 20);
     m_window.DrawRect(sf::Vector2f(51, 40), sf::Vector2f(402, 535), sf::Color::Cyan);
-    m_window.DrawString(L"Да", sf::Vector2f(414, 540), sf::Color::White, 16);
+    m_window.DrawString(L"Да", sf::Vector2f(414, 540), sf::Color::White, 20);
 
     m_window.DrawRect(sf::Vector2f(51, 40), sf::Vector2f(471, 535), sf::Color::Cyan);
-    m_window.DrawString(L"Нет", sf::Vector2f(479, 540), sf::Color::White, 16);
+    m_window.DrawString(L"Нет", sf::Vector2f(479, 540), sf::Color::White, 20);
     PrintField(Whose_turn, Player_1_invisible, Player_2_invisible); // Вывод двух конечных полей
     m_window.Display();
 
     while (!sf::Event::Closed)
     {
         m_window.PollEvents();
-        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
+        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Window::Keystate::PRESSED)
         {
             int mouseX, mouseY;
             m_window.GetMousePos(mouseX, mouseY);
@@ -610,16 +603,16 @@ void Game::MainMenu()
     m_window.DrawRect(sf::Vector2f(83, 45), sf::Vector2f(423, 290), sf::Color::Cyan);
     m_window.DrawRect(sf::Vector2f(112, 45), sf::Vector2f(409, 365), sf::Color::Cyan);
 
-    m_window.Window::DrawString(L"Выберите режим игры :", sf::Vector2f(347, 170), sf::Color::Black, 18);
-    m_window.Window::DrawString(L"PvP", sf::Vector2f(446, 225), sf::Color::Black, 16);
-    m_window.Window::DrawString(L"PvBOT", sf::Vector2f(433, 300), sf::Color::Black, 16);
-    m_window.Window::DrawString(L"BOTvBOT", sf::Vector2f(419, 375), sf::Color::Black, 16);
+    m_window.Window::DrawString(L"Выберите режим игры :", sf::Vector2f(347, 170), sf::Color::Black, 22);
+    m_window.Window::DrawString(L"PvP", sf::Vector2f(446, 225), sf::Color::Black, 20);
+    m_window.Window::DrawString(L"PvBOT", sf::Vector2f(433, 300), sf::Color::Black, 20);
+    m_window.Window::DrawString(L"BOTvBOT", sf::Vector2f(419, 375), sf::Color::Black, 20);
 
     m_window.Display();
     while (!sf::Event::Closed)
     {
         m_window.PollEvents();
-        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Keystate::PRESSED)
+        if (m_window.GetKeyState(sf::Mouse::Button::Left) == Window::Keystate::PRESSED)
         {
             int mouseX, mouseY;
             m_window.GetMousePos(mouseX, mouseY);

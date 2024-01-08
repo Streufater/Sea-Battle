@@ -29,21 +29,7 @@ bool Field::LoadFromFile(const char* filepath)
 
 	return false;
 }
-bool Field::LoadToFile(const char* filepath) const
-{
-	std::ofstream field(filepath);   // окрываем файл для чтения
-	if (field.is_open())
-	{
-		for (int i = 0; i < 100; i++)
-		{
-			field << (int)m_field[i];
-		}
-		return true;
-	}
-	std::cout << L"Не удалось загрузить: " << filepath << std::endl;
 
-	return false;
-}
 
 Field::State Field::GetState(int x, int y) const
 {
@@ -66,16 +52,6 @@ void Field::SetState(State s, int x, int y)
 	else
 	{
 		//std::cout << "[GAME WARNING] out of bounds Set!;" << " {" << x << "," << y << "}" << std::endl;
-	}
-}
-
-void Field::Print() const
-{
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-			std::cout << (int)m_field[SubToInd(j, i)] << " ";
-		std::cout << std::endl;
 	}
 }
 

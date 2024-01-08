@@ -5,16 +5,16 @@
 #include <map>
 #include <string>
 
-enum class Keystate
-{
-	PRESSED,
-	RELEASED
-};
-
 class Window
 {
 
 public:
+
+	enum class Keystate
+	{
+		PRESSED,
+		RELEASED
+	};
 
 	Window();
 	Window(unsigned int width, unsigned int height, const char* title);
@@ -52,7 +52,6 @@ private:
 	sf::Image m_BGimage;
 	sf::Texture m_BGtexture;
 	sf::Sprite m_BGsprite;
-
 
 	sf::RectangleShape m_square;
 	sf::ConvexShape m_triangle;

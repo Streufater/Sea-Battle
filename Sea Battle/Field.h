@@ -16,16 +16,13 @@ public:
 	~Field();
 
 	bool LoadFromFile(const char* filepath);
-	bool LoadToFile(const char* filepath) const;
 	
 	State GetState(int x, int y) const;
 	void SetState(State s, int x, int y);
 
-	void Print() const;
 	void Clear();
 
 private:
 	int SubToInd(int x, int y) const;
 	std::array<State, 100> m_field{ State::EMPTY };
-
 };

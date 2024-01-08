@@ -20,7 +20,7 @@ public:
 	virtual void Init() = 0;
 };
 
-class StupidBotAction : public BotAction
+class FirstBotAction : public BotAction
 {
 	struct Coords
 	{
@@ -158,7 +158,7 @@ private:
 	bool m_HalfField = false;
 };
 
-class SmartBotAction : public BotAction
+class SecondBotAction : public BotAction
 {
 	struct Coords
 	{

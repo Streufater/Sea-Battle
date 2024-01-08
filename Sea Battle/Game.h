@@ -17,7 +17,6 @@ public:
 	~Game();
 
 	bool LoadFromFile(const char* filepath_1, const char* filepath_2);
-	bool LoadToFile(const char* filepath_1, const char* filepath_2);
 
 	void PrintMurkup();
 	void PrintFieldBorders(bool Whose_turn);
