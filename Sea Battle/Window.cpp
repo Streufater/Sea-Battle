@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <iostream>
+#include <cstdlib>
 
 Window::Window()
 {
@@ -95,6 +96,7 @@ void Window::PollEvents()
 		{
 		case sf::Event::Closed:
 			m_window->close();
+			std::exit(0);
 			break;
 		case sf::Event::KeyPressed:
 			m_keymap[event.key.code] = Keystate::PRESSED;
@@ -153,13 +155,11 @@ void Window::DrawString(std::wstring s, const sf::Vector2f pos, const sf::Color&
 
 void Window::DrawBackground()
 {	
-
 	// load background
 	if (m_BGimage.loadFromFile("SeaBatlle.jpg"))
 	{
 		m_BGtexture.loadFromImage(m_BGimage);
 		m_BGsprite.setTexture(m_BGtexture);
-
 	}
 	m_window->draw(m_BGsprite);
 }

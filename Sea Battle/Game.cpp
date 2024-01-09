@@ -50,7 +50,6 @@ bool Game::HIT(unsigned int x, unsigned int y, Field& visible, Field& invisible)
         invisible.SetState(Field::State::HIT, x, y);
         return true;
     }
-
     return false;
 }
 
@@ -179,7 +178,6 @@ void Game::PrintGuid()
 void Game::PrintEmptyField()
 {
     PrintMurkup();
-
     for (int k = 82; k <= 400; k += 32)
         for (int b = 82; b <= 400; b += 32)
         {
@@ -198,7 +196,7 @@ void Game::PrintField(bool Whose_turn, Field& invisible)
 {
     PrintMurkup();
     PrintGuid();
-
+    PrintFieldBorders(!Whose_turn);
     if (Whose_turn == 1)
     {
         for (int k = 82; k <= 400; k += 32)
@@ -215,14 +213,11 @@ void Game::PrintField(bool Whose_turn, Field& invisible)
                 default:break;
                 }
             }
-
         for (int k = 82; k <= 400; k += 32)
             for (int b = 530; b <= 848; b += 32)
             {
                 m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue);
             }
-
-        PrintFieldBorders(!Whose_turn);
     }
     else if (Whose_turn == 0)
     {
@@ -245,8 +240,6 @@ void Game::PrintField(bool Whose_turn, Field& invisible)
             {
                 m_window.DrawRect(sf::Vector2f(30, 30), sf::Vector2f(b, k), sf::Color::Blue);
             }
-
-        PrintFieldBorders(!Whose_turn);
     }
 }
 
@@ -254,7 +247,7 @@ void Game::PrintField(bool Whose_turn, Field& invisible)
 void  Game::PrintField(bool Whose_turn, Field& Player_1_field, Field& Player_2_field)
 {
     PrintMurkup();
-
+    PrintFieldBorders(Whose_turn);
     for (int k = 82; k <= 400; k += 32)
     {
         for (int b = 82; b <= 400; b += 32)
@@ -288,8 +281,6 @@ void  Game::PrintField(bool Whose_turn, Field& Player_1_field, Field& Player_2_f
             }
         }
     }
-
-    PrintFieldBorders(Whose_turn);
 }
 
 void Game::PrintSelectedShip(bool isVertical, int SelectedShipSize)
@@ -319,8 +310,7 @@ void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Fi
     int NumberOfSingleDeck = 0; int NumberOfDoubleDeck = 0;
     int NumberOfThreeDeck = 0; int NumberOfFourDeck = 0;
 
-
-    while ((NumberOfSingleDeck + NumberOfDoubleDeck + NumberOfThreeDeck + NumberOfFourDeck) != 10)
+    while ((NumberOfSingleDeck + NumberOfDoubleDeck + NumberOfThreeDeck + NumberOfFourDeck) < 10)
     {
         m_window.PollEvents();
 
@@ -360,7 +350,7 @@ void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Fi
 
         m_window.Clear();
         PrintField(Whose_turn, invisible);
-        Game::PrintSelectedShip(isVertical, SelectedShipSize);
+        PrintSelectedShip(isVertical, SelectedShipSize);
         m_window.Display();
 
         if (m_window.GetKeyState(sf::Mouse::Button::Left) == Window::Keystate::PRESSED)
@@ -405,7 +395,6 @@ void  Game::PlacementOfShips(bool Whose_turn, unsigned int x, unsigned int y, Fi
                         invisible.Field::SetState(Field::State::SHIP, x + i, y); // place ship
                     }
                 }
-
                 SelectedShipSize = 0;
             }
         }
@@ -421,6 +410,7 @@ bool Game::Play()
     bool Whose_turn = 1;
     ShotResult MyLastHit = ShotResult::MISS;
     ShotResult EnemyLastHit = ShotResult::MISS;
+
     m_MyBot->Init();
     m_EnemyBot->Init();
 
@@ -477,7 +467,7 @@ bool Game::Play()
         }
         else if (Whose_turn == 1 && first == Player::Bot) // Если ходит игрок 1 и это бот
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             m_MyBot->MakeTurn(x, y, MyLastHit, Player_2_visible);
 
             if (!HIT(x, y, Player_2_visible, Player_2_invisible))
@@ -526,7 +516,7 @@ bool Game::Play()
         }
         else if (Whose_turn == 0 && second == Player::Bot) // Если ходит игрок 2 и это бот
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             m_EnemyBot->MakeTurn(x, y, EnemyLastHit, Player_1_visible);
 
             if (!HIT(x, y, Player_1_visible, Player_1_invisible))

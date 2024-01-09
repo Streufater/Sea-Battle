@@ -1,7 +1,9 @@
 ﻿#include <iostream>
 #include "Game.h"
 
-
+#if defined(NDEBUG)
+    #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
 
 int main()
 {

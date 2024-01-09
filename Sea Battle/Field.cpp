@@ -1,7 +1,6 @@
 #include "Field.h"
 #include <iostream>
 #include <fstream>
-#include <string>
 
 Field::Field()
 {
@@ -25,21 +24,15 @@ bool Field::LoadFromFile(const char* filepath)
 		}
 		return true;
 	}
-	std::cout << L"Не удалось загрузить: " << filepath << std::endl;
-
 	return false;
 }
-
 
 Field::State Field::GetState(int x, int y) const
 {
 	if (x < 0 || y < 0 || x > 9 || y > 9)
 	{
-		//std::cout << "[GAME WARNING] out of bounds get!:" << " {" << x << "," << y << "}" << std::endl;
 		return Field::State::EMPTY;
 	}
-	
-
 	return m_field[SubToInd(x, y)];
 }
 
@@ -48,10 +41,6 @@ void Field::SetState(State s, int x, int y)
 	if (x >= 0 && x <= 9 && y >= 0 && y <= 9)
 	{
 		m_field[SubToInd(x, y)] = s;
-	}
-	else
-	{
-		//std::cout << "[GAME WARNING] out of bounds Set!;" << " {" << x << "," << y << "}" << std::endl;
 	}
 }
 

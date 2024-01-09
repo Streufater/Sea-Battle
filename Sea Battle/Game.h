@@ -6,7 +6,6 @@
 class Game
 {
 public:
-
 	enum class Player
 	{
 		Human,
@@ -34,7 +33,6 @@ public:
 	bool CheckForCorrectShipPosition(unsigned int x, unsigned int y, Field invisible, bool isVertical, int SelectedShipSize);
 
 	bool Play();
-
 	void MainMenu();
 
 private:
