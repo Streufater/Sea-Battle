@@ -170,7 +170,7 @@ void Game::PrintFieldBorders(bool Whose_turn)
 
 void Game::PrintGuid()
 {
-    m_window.DrawString(L"1, 2, 3, 4 - размер корабля", sf::Vector2f(20, 580), sf::Color::White, 16);
+    m_window.DrawString(L"Нажмите 1, 2, 3, 4 для выбора размера корабля", sf::Vector2f(20, 580), sf::Color::White, 16);
     m_window.DrawString(L"Space - поворот корабля на 90 градусов", sf::Vector2f(20, 615), sf::Color::White, 16);
     m_window.DrawString(L"Перед тем как поставить корабль выберете его размер!", sf::Vector2f(20, 650), sf::Color::White, 16);
 }

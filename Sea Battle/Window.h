@@ -5,11 +5,8 @@
 #include <map>
 #include <string>
 
-class Window
-{
-
+class Window {
 public:
-
 	enum class Keystate
 	{
 		PRESSED,
@@ -40,7 +37,6 @@ public:
 	void DrawBackground();
 
 private:
-
 	std::map<sf::Keyboard::Key, Keystate> m_keymap;
 	std::map<sf::Mouse::Button, Keystate> m_mousemap;
 	int m_mouseX;
